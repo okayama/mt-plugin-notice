@@ -1,0 +1,134 @@
+<__trans_section component="Notice">
+
+<$mt:setvar name="is_draft_error" value="0"$>
+<mt:unless name="can_edit_message">
+    <mt:if name="status" eq="1">
+        <$mt:setvar name="is_draft_error" value="1"$>
+    </mt:if>
+    <mt:unless name="id">
+        <$mt:setvar name="is_draft_error" value="1"$>
+    </mt:unless>
+</mt:unless>
+
+<mt:if name="can_edit_message">
+    <$mt:setvar name="page_title" value="<__trans phrase="Edit massage">"$>
+<mt:else>
+    <mt:if name="is_draft_error">
+        <$mt:setvar name="page_title" value="<__trans phrase="This message can not show.">"$>
+    <mt:else>
+        <$mt:setvar name="page_title" value="$title"$>
+    </mt:if>
+</mt:if>
+
+<mt:setvarblock name="system_msg">
+    <div id="msg-container">
+    <mt:if name="save_changes">
+        <mtapp:statusmsg
+            id="save-changes"
+            class="success">
+                <__trans phrase="Your changes have been saved.">
+        </mtapp:statusmsg>
+    </mt:if>
+    <mt:if name="saved">
+        <mtapp:statusmsg
+            id="save-changes"
+            class="success">
+                <__trans phrase="This message have been saved.">
+        </mtapp:statusmsg>
+    </mt:if>
+    </div>
+</mt:setvarblock>
+
+<mt:setvarblock name="action_buttons">
+    <button
+        type="submit"
+        accesskey="s"
+        title="<__trans phrase="Save changes to this message (s)">"
+        class="save action primary-button"
+        ><__trans phrase="Save Changes"></button>
+    <mt:if name="id">
+    <button
+        onclick="doRemoveItems(this.form, '<__trans phrase="message">', '<__trans phrase="message">', 'id', { 'return_args' : '__mode=list_message&amp;blog_id=<mt:var name="blog_id">' } )"
+        type="submit"
+        accesskey="x"
+        class="delete action"
+        title="<__trans phrase="Delete this message (x)">"
+        ><__trans phrase="Delete"></button>
+    </mt:if>
+</mt:setvarblock>
+
+<$mt:include name="include/header.tmpl"$>
+
+<mt:if name="is_draft_error">
+
+    <__trans phrase="Because of under writing, this message is not showed.">
+
+<mt:else>
+
+    <form method="post" action="<mt:var name="script_url">">
+        <input type="hidden" name="id" value="<mt:var name="id" escape="html">" />
+        <input type="hidden" name="blog_id" value="<mt:var name="blog_id" escape="html">" />
+        <mt:unless name="id"><input type="hidden" name="author_id" value="<mt:var name="author_id" escape="html">" /></mt:unless>
+        <input type="hidden" name="__mode" value="save" />
+        <input type="hidden" name="action_name" value="" />
+        <input type="hidden" name="_type" value="message" />
+        <input type="hidden" name="return_args" value="__mode=view&amp;_type=message<mt:if name="blog_id">&amp;blog_id=<mt:var name="blog_id" escape="html"></mt:if><mt:if name="id">&amp;id=<mt:var name="id" escape="html"></mt:if>" />
+        <input type="hidden" name="magic_token" value="<$mt:var name="magic_token"$>" id="m_t" />
+    
+    
+        <mtapp:setting
+            id="title"
+            label="<__trans phrase="Title">"
+            content_class="field-content-text"
+            show_hint="0">
+            <mt:if name="can_edit_message">
+                    <input type="text" name="title" class="full-width medium" value="<mt:if name="id"><mt:var name="title" escape="html"><mt:else><mt:var name="default_title" escape="html"></mt:if>" />
+            <mt:else>
+                    <mt:var name="title" escape="html">
+            </mt:if>
+        </mtapp:setting>
+    
+        <mtapp:setting
+            id="message"
+            label="<__trans phrase="Message">"
+            content_class="field-content-text"
+            show_hint="0">
+            <mt:if name="can_edit_message">
+                    <textarea name="text" class="full-width medium" style="height:200px;"><mt:if name="id"><mt:var name="text" escape="html"><mt:else><mt:var name="default_text" escape="html"></mt:if></textarea>
+            <mt:else>
+                    <mt:var name="text" escape="html" url_link="1" nl2br="1">
+            </mt:if>
+        </mtapp:setting>
+
+    <mt:if name="can_edit_message">
+        <mtapp:setting
+            id="status"
+            label="<__trans phrase="Status">"
+            label_class="left-label status"
+            hint="<__trans phrase="Update the status of this post">"
+            show_hint="0">
+            <select id="status" name="status" class="width90 comment-status">
+                <mt:unless name="id"><mt:setvar name="status" value="$default_status"></mt:unless>
+                <option value="2" <mt:if name="status" eq="2">selected="selected"</mt:if>><__trans phrase="Published"></option>
+                <option value="1" <mt:if name="status" eq="1">selected="selected"</mt:if>><__trans phrase="Draft"></option>
+            </select>
+            <a title="<__trans phrase="View all post with this status">" href="<mt:var name="script_url">?__mode=list_message&amp;blog_id=<mt:var name="blog_id" escape="html">&amp;filter=status&amp;filter_val=<mt:var name="status" escape="html">"><img alt="<__trans phrase="Do filter">" src="<mt:var name="static_uri">images/filter.gif" width="8" height="8" border="0" /></a>
+        </mtapp:setting>
+    </mt:if>
+        
+        <mt:if name="can_edit_message">
+            <div class="actions-bar  pkg">
+                <div class="actions-bar-inner">
+                    <div class="button-actions actions">
+                    <mt:var name="action_buttons">
+                    </div>
+                </div>
+            </div>
+        </mt:if>
+    
+    </form>
+
+</mt:if>
+
+<$mt:include name="include/footer.tmpl"$>
+</__trans_section>

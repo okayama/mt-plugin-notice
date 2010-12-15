@@ -1,0 +1,52 @@
+<mtapp:widget class="widget" label="<__trans phrase="Unread messages">" can_close="1">
+    
+    <div id="message-listing" class="listing ">
+
+<mt:if name="messages">
+    <mt:loop name="messages">
+        <mt:if __first__>
+            <table id="message-listing-table" class="message-listing-table compact" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th class="si"><__trans phrase="Read status"></th>
+                        <th class="title"><__trans phrase="Title"></th>
+                        <th class="text"><__trans phrase="Text"></th>
+                        <th class="author"><__trans phrase="Author"></th>
+                        <th class="date"><__trans phrase="Created On"></th>
+                        <th class="date"><__trans phrase="Modified On"></th>
+                    </tr>
+                </thead>
+                <tbody>
+        </mt:if>
+                    <tr class="<mt:if name="__odd__">odd<mt:else>even</mt:if>">
+                        <td class="si status-pending">
+                    <mt:if name="visible">
+                            <a href="<mt:var name="script_url">?__mode=list_message<mt:if name="blog_id">&amp;blog_id=<mt:var name="blog_id"></mt:if>&amp;filter=status&amp;filter_val=2" title="<__trans phrase="Only show approved messages">"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<__trans phrase="Published">" width="9" height="9" /></a>
+                    <mt:else>
+                            <a href="<mt:var name="script_url">?__mode=list_message<mt:if name="blog_id">&amp;blog_id=<mt:var name="blog_id"></mt:if>&amp;filter=status&amp;filter_val=1" title="<__trans phrase="Only show pending messages">"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<__trans phrase="Pending">" width="9" height="9" /></a>
+                    </mt:if>
+                        </td>
+                        <td class="title"><a href="<mt:var name="script_url">?__mode=view&amp;_type=message&amp;id=<mt:var name="id" escape="url">&amp;blog_id=<mt:var name="blog_id" escape="url">" title="<__trans phrase="Edit this message">"><mt:if name="title"><mt:var name="title" escape="html"><mt:else>...</mt:if></a></td>
+                        <td class="text"><mt:var name="message" trim_to="50">...</td>
+                        <td class="author"><mt:var name="author_name"></td>
+                        <td class="date"><span><mt:var name="created_on_formatted"></span></td>
+                        <td class="date"><span><mt:var name="modified_on_formatted"></span></td>
+                    </tr>
+        <mt:if __last__>
+                </tbody>
+            </table>
+        </mt:if>
+    </mt:loop>
+<mt:else>
+
+    <mtapp:statusmsg
+        id="zero-state"
+        class="info zero-state">
+        <__trans phrase="No unread messages.">
+        <a href="<mt:var name="script_url">?__mode=list_message<mt:if name="blog_id">&amp;blog_id=<mt:var name="blog_id"></mt:if>" title="<__trans phrase="Only show approved messages">"><__trans phrase="List all messages."></a>
+    </mtapp:statusmsg>
+
+</mt:if>
+    </div>
+    
+</mtapp:widget>

@@ -1,0 +1,77 @@
+<__trans_section component="Notice">
+<mt:setvarblock name="list_id"><$mt:var name="object_type"$>-listing</mt:setvarblock>
+<mt:if name="blog_id"><mt:var name="blog_view" value="1"></mt:if>
+
+<mt:setvarblock name="action_buttons">
+    <mt:if name="state_editable">
+<button
+    onclick="doForMarkedInThisWindow(getByID('<$mt:var name="object_type"$>-listing-form'), '<__trans phrase="message" escape="js">', '<__trans phrase="message" escape="js">', 'id', 'publish_messages', {}, '<__trans phrase="to publish" escape="js">'); return false;"
+    accesskey="a"
+    title="<__trans phrase="Published selected messages (a)">"
+    ><__trans phrase="Publish"></button>
+<button
+    onclick="doForMarkedInThisWindow(getByID('<$mt:var name="object_type"$>-listing-form'), '<__trans phrase="message" escape="js">', '<__trans phrase="message" escape="js">', 'id', 'draft_messages', {}, '<__trans phrase="Draft" escape="js">'); return false;"
+    accesskey="u"
+    title="<__trans phrase="Draft selected messages (u)">"
+    ><__trans phrase="Draft"></button>
+<button
+    onclick="doRemoveItems(getByID('<$mt:var name="object_type"$>-listing-form'), '<__trans phrase="message" escape="js">', '<__trans phrase="messages" escape="js">'); return false;"
+    accesskey="u"
+    title="<__trans phrase="Delete selected messages (x)">"
+    ><__trans phrase="Delete"></button>
+
+    </mt:if>
+</mt:setvarblock>
+
+<mtapp:listing id="$list_id">
+    <mt:if __first__>
+            <thead>
+                <tr>
+                    <th class="cb"><input type="checkbox" name="id-head" value="all" class="select" /></th>
+        <mt:unless name="tab_junk">
+                    <th class="si"><img src="<mt:var name="static_uri">images/status_icons/invert-flag.gif" alt="<__trans phrase="Status">" title="<__trans phrase="Status">" width="9" height="9" /></th>
+        </mt:unless>
+                    <th class="si"><__trans phrase="Read status"></th>
+                    <th class="title"><__trans phrase="Title"></th>
+                    <th class="text"><__trans phrase="Text"></th>
+                    <th class="author"><__trans phrase="Author"></th>
+                    <th class="date"><__trans phrase="Created On"></th>
+                    <th class="date"><__trans phrase="Modified On"></th>
+                </tr>
+            </thead>
+            <tbody>
+    </mt:if>
+                <tr class="<mt:if name="__odd__">odd<mt:else>even</mt:if>">
+                    <td class="cb">
+            <mt:if name="has_edit_access">
+                        <input type="checkbox" name="id" value="<mt:var name="id" escape="html">" class="select" />
+            <mt:else>
+                        &nbsp;
+            </mt:if>
+                    </td>
+            
+                    <td class="si <mt:if name="visible">status-publish<mt:else>status-pending</mt:if>">
+                <mt:if name="visible">
+                        <a href="<mt:var name="script_url">?__mode=list_message<mt:if name="blog_id">&amp;blog_id=<mt:var name="blog_id"></mt:if>&amp;filter=status&amp;filter_val=2" title="<__trans phrase="Only show approved messages">"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<__trans phrase="Published">" width="9" height="9" /></a>
+                <mt:else>
+                        <a href="<mt:var name="script_url">?__mode=list_message<mt:if name="blog_id">&amp;blog_id=<mt:var name="blog_id"></mt:if>&amp;filter=status&amp;filter_val=1" title="<__trans phrase="Only show pending messages">"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<__trans phrase="Pending">" width="9" height="9" /></a>
+                </mt:if>
+                    </td>
+                    <td class="si <mt:if name="read">status-publish<mt:else>status-pending</mt:if>">
+                <mt:if name="read">
+                        <img src="<mt:var name="static_uri">images/spacer.gif" alt="<__trans phrase="Read">" width="9" height="9" />
+                <mt:else>
+                        <img src="<mt:var name="static_uri">images/spacer.gif" alt="<__trans phrase="Unread">" width="9" height="9" />
+                </mt:if>
+                    </td>
+					<td class="title"><a href="<mt:var name="script_url">?__mode=view&amp;_type=message&amp;id=<mt:var name="id" escape="url">&amp;blog_id=<mt:var name="blog_id" escape="url">" title="<__trans phrase="Edit this message">"><mt:if name="title"><mt:var name="title" escape="html"><mt:else>...</mt:if></a></td>
+                    <td class="text"><mt:var name="text" trim_to="50">...</td>
+                    <td class="author"><mt:var name="author_name"></td>
+                    <td class="date"><span><mt:var name="created_on_formatted"></span></td>
+                    <td class="date"><span><mt:var name="modified_on_formatted"></span></td>
+                </tr>
+    <mt:if __last__>
+            </tbody>
+    </mt:if>
+</mtapp:listing>
+</__trans_section>

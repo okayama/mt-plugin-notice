@@ -1,0 +1,169 @@
+<__trans_section component="Notice">
+<$mt:setvar name="page_title" value="<__trans phrase="Message">"$>
+
+<mt:setvarblock name="system_msg">
+    <div id="msg-container">
+    <mt:if name="saved_deleted">
+        <mtapp:statusmsg
+            id="saved-deleted"
+            class="success">
+                <__trans phrase="The message has been deleted from the database.">
+        </mtapp:statusmsg>
+    </mt:if>
+    <mt:if name="status_changed" eq="1">
+        <mtapp:statusmsg
+            id="saved-deleted"
+            class="success">
+                <__trans phrase="The message has been changed status to draft.">
+        </mtapp:statusmsg>
+    </mt:if>
+    <mt:if name="status_changed" eq="2">
+        <mtapp:statusmsg
+            id="saved-deleted"
+            class="success">
+                <__trans phrase="The message has been changed status to published.">
+        </mtapp:statusmsg>
+    </mt:if>
+    </div>
+</mt:setvarblock>
+
+<mt:setvarblock name="related_content">
+    <$mtapp:PageActions from="$mode"$>
+</mt:setvarblock>
+
+<mt:setvarblock name="html_body_footer">
+    <$mt:include name="include/display_options.tmpl"$>
+</mt:setvarblock>
+
+<mt:setvarblock name="html_head" append="1">
+<style type="text/css">
+<mt:include name="include/teble_css.tmpl">
+</style>
+<script type="text/javascript">
+/* <![CDATA[ */
+function enableFilterButton() {
+    getByID("filter-button").style.display = "inline";
+}
+
+function toggleFilter() {
+    var filterActive = getByID("filter-title");
+    if (filterActive.style.display == "none") {
+        filterActive.style.display = "block";
+        getByID("filter-select").style.display = "none";
+    } else {
+        filterActive.style.display = "none";
+        getByID("filter-select").style.display = "block";
+    }
+}
+
+function setFilterCol(choice) {
+    var sel = getByID('filter-select-form');
+    if (!sel) return;
+    sel.className = "filter-" + choice;
+    var fld = getByID('filter-col');
+    if (fld) {
+        if (choice == 'status') {
+            fld.selectedIndex = 0;
+            col_span = getByID("filter-text-col");
+            if (fld.selectedIndex > -1 && col_span)
+            col_span.innerHTML = '<strong>' +
+                fld.options[fld.selectedIndex].text + '</strong>';
+        } else {
+            col_span = getByID("filter-text-col");
+            val_span = getByID("filter-text-val");
+            if(val_span){
+                val_span.innerHTML = '<strong> ' + '<mt:var name="filter_val" escape="js">' +' </strong>';
+            }
+        }
+    }
+}
+
+var tableSelect;
+function init()
+{
+    // setup
+    tableSelect = new TC.TableSelect( "<$mt:var name="object_type"$>-listing-table" );
+    tableSelect.rowSelect = true;
+    setFilterCol(<mt:if name="filter">'<mt:var name="filter" escape="js">'<mt:else>'none'</mt:if>);<mt:if name="filter">
+    setFilterVal('<mt:var name="filter_val" escape="js">');
+</mt:if>
+}
+
+TC.attachLoadEvent( init );
+/* ]]> */
+</script>
+
+</mt:setvarblock>
+
+<mt:setvarblock name="list_filter_form">
+<form id="filter-form" method="get" action="<mt:var name="mt_url">">
+    <input type="hidden" name="__mode" value="list_<$mt:var name="object_type"$>" />
+        <mt:if name="blog_id">
+    <input type="hidden" name="blog_id" value="<mt:var name="blog_id">" />
+        </mt:if>
+    <input id="filter" type="hidden" name="filter" value="" />
+    <input id="filter_val" type="hidden" name="filter_val" value="" />
+</form>
+<div class="listing-filter">
+    <div class="listing-filter-inner inner pkg">
+        <form id="filter-select-form" method="get" onsubmit="execFilter(this)">
+            <div class="filter">
+                <div id="filter-title" class="filter-title">
+            <mt:unless name="filter">
+                    <strong><__trans phrase="All [_1]" params="<$mt:var name="object_label_plural"$>"></strong>
+                    <mt:if name="can_edit_message"><a href="javascript:void(0)" onclick="toggleFilter()" class="filter-link">[ <__trans phrase="change"> ]</a></mt:if>
+            <mt:else>
+                <mt:if name="filter_key">
+                    <strong><__trans phrase="Showing only: [_1]" params="<mt:var name="filter_label">"></strong>
+                    <!-- <a href="javascript:void(0)" onclick="toggleFilter()" class="filter-link">[ <__trans phrase="change"> ]</a> -->
+                <mt:else>
+                    <strong>
+                        <mt:if name="filter_val" eq="1">
+                        <a href="javascript:void(0)" onclick="toggleFilter()"><__trans phrase="[_1] where [_2] is [_3]" params='<$mt:var name="object_label_plural"$>%%<span id="filter-text-col">&nbsp;</span>%%&nbsp;&#39;<mt:if name="entry_title"><mt:var name="entry_title" escape="html"><mt:else><__trans_section component="Notice"><__trans phrase="Draft"></__trans_section></mt:else></mt:if>&#39;&nbsp;<span id="filter-text-val" style="display:none"></span>'></a>
+                        <mt:elseif name="filter_val" eq="2">
+                        <a href="javascript:void(0)" onclick="toggleFilter()"><__trans phrase="[_1] where [_2] is [_3]" params='<$mt:var name="object_label_plural"$>%%<span id="filter-text-col">&nbsp;</span>%%&nbsp;&#39;<mt:if name="entry_title"><mt:var name="entry_title" escape="html"><mt:else><__trans_section component="Notice"><__trans phrase="Published"></__trans_section></mt:else></mt:if>&#39;&nbsp;<span id="filter-text-val" style="display:none"></span>'></a>
+                        <mt:else>
+                        <a href="javascript:void(0)" onclick="toggleFilter()"><__trans phrase="[_1] where [_2] is [_3]" params='<$mt:var name="object_label_plural"$>%%<span id="filter-text-col">&nbsp;</span>%%<span id="filter-text-val"></span>'></a>
+                        </mt:else>
+                        </mt:if>
+                    </strong>
+                <a href="<mt:var name="script_url">?__mode=<mt:var name="mode" escape="url"><mt:if name="blog_id">&amp;blog_id=<mt:var name="blog_id"></mt:if><mt:if name="is_power_edit">&amp;is_power_edit=1</mt:if>">[ <__trans phrase="Remove filter"> ]</a>
+                </mt:if>
+            </mt:unless>
+                </div>
+        <div id="filter-select" class="page-title" style="display: none">
+            <!-- start filter form -->
+                <__trans phrase="status">
+                <select id="filter-col" name="filter" onchange="setFilterCol(this.options[this.selectedIndex].value);enableFilterButton(this)" style="display:none">
+                    <option value="status"><__trans phrase="status"></option>
+                </select>
+                <__trans phrase="is">
+                <span id="filter-status" style="display: inline">
+                    <select id="status-val" name="filter_val" onchange="enableFilterButton()">
+                        <option value="2"><__trans phrase="Published"></option>
+                        <option value="1"><__trans phrase="Draft"></option>
+                    </select>
+                </span>
+            <span class="buttons">
+                <button
+                    id="filter-button"
+                    onclick="return execFilter(getByID('filter-select-form'))"
+                    type="submit"
+                    ><__trans phrase="Filter"></button>
+                <button
+                    onclick="toggleFilter(); return false;"
+                    type="submit"
+                    ><__trans phrase="Cancel"></button>
+            </span>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+</mt:setvarblock>
+
+<$mt:include name="include/header.tmpl"$>
+<$mt:var name="list_filter_form"$>
+<$mt:include name="include/message_table.tmpl"$>
+<$mt:include name="include/footer.tmpl"$>
+</__trans_section>

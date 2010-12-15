@@ -1,0 +1,37 @@
+<h4><__trans phrase="Message"></h4>
+<mtapp:setting
+    id="default_status"
+    label="<__trans phrase="Default status">"
+    hint=""
+    show_hint="0">
+    <ul>
+        <li>
+            <select name="default_status" id="default_status" value="<mt:var name="default_status" escape="html">" />
+                <option value="2"<mt:if name="default_status" eq="2"> selected="selected"</mt:if>><__trans phrase="Published"></option>
+                <option value="1"<mt:if name="default_status" eq="1"> selected="selected"</mt:if>><__trans phrase="Draft"></option>
+            </select>
+        </li>
+    </ul>
+</mtapp:setting>
+<mtapp:setting
+    id="default_title"
+    label="<__trans phrase="Default title">"
+    hint=""
+    show_hint="0">
+    <ul>
+        <li>
+            <input type="text" name="default_title" id="default_title" class="full-width" value="<mt:var name="default_title" escape="html">" />
+        </li>
+    </ul>
+</mtapp:setting>
+<mtapp:setting
+    id="default_text"
+    label="<__trans phrase="Default text">"
+    hint=""
+    show_hint="0">
+    <ul>
+        <li>
+            <textarea name="default_text" id="default_text" class="full-width" style="height:120px"><mt:var name="default_text" escape="html"></textarea>
+        </li>
+    </ul>
+</mtapp:setting>
